@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout
+    android:id="@+id/movie_detail_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:background="@color/colorDarkGrey"
+    android:animateLayoutChanges="true">
+
+    <View
+        android:id="@+id/movie_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/view_background"
+        android:elevation="3dp"
+        app:layout_constraintBottom_toBottomOf="@id/movie_title_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/movie_title_tv" />
+
+    <TextView
+        android:id="@+id/movie_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="3dp"
+        android:ellipsize="marquee"
+        android:fontFamily="@font/fredoka_one"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="@color/colorBlack"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/movie_title" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/genre_rv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/description_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/movie_title_view" />
+
+    <View
+        android:id="@+id/description_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="@id/description_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/genre_rv" />
+
+    <View
+        android:id="@+id/like_bar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/like_bar_view"
+        app:layout_constraintTop_toTopOf="@id/percentage_tv"
+        app:layout_constraintBottom_toBottomOf="@id/percentage_tv"
+        app:layout_constraintStart_toStartOf="@id/percentage_tv"
+        app:layout_constraintEnd_toEndOf="@id/percentage_tv" />
+
+    <TextView
+        android:id="@+id/percentage_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/fredoka_one"
+        android:padding="28dp"
+        android:textColor="@color/colorBlack"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/genre_rv"
+        tools:text="86%" />
+
+    <TextView
+        android:id="@+id/likes_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="2dp"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/likesCountColor"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@+id/like_bar"
+        app:layout_constraintStart_toStartOf="@+id/like_bar"
+        app:layout_constraintTop_toBottomOf="@+id/like_bar"
+        tools:text="5278" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/likes_count_tv"
+        app:layout_constraintStart_toEndOf="@+id/likes_count_tv"
+        app:layout_constraintTop_toTopOf="@+id/likes_count_tv"
+        app:srcCompat="@drawable/ic_poeple"
+        tools:ignore="ContentDescription" />
+
+    <View
+        android:id="@+id/margin_view"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/marginColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/likes_count_tv" />
+
+    <TextView
+        android:id="@+id/description_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_light"
+        android:paddingBottom="16dp"
+        android:textColor="@color/colorBlack"
+        tools:text="This is all about movie."
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/margin_view"
+        app:layout_constraintStart_toStartOf="@+id/margin_view"
+        app:layout_constraintTop_toBottomOf="@+id/margin_view" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:max="100"
+        android:progressDrawable="@drawable/custom_progress_bar"
+        app:layout_constraintBottom_toBottomOf="@+id/like_bar"
+        app:layout_constraintEnd_toEndOf="@+id/like_bar"
+        app:layout_constraintStart_toStartOf="@+id/like_bar"
+        app:layout_constraintTop_toTopOf="@+id/like_bar" />
+
+    <TextView
+        android:id="@+id/review_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/review_title"
+        android:textColor="@color/colorBlack"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_tv" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/review_rv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
+        android:paddingBottom="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/review_header" />
+
+</android.support.constraint.ConstraintLayout>

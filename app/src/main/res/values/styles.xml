@@ -1,0 +1,67 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:statusBarColor">@color/colorBlack</item>
+    </style>
+
+    <style name="ErrorTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/error_screen</item>
+    </style>
+
+    <style name="MovieListTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimaryDark">@color/statusBar</item>
+    </style>
+
+    <style name="MovieDetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimEnabled">false</item>
+
+    </style>
+
+    <style name="ToolbarTitleStyle">
+        <item name="android:fontFamily">@font/fredoka_one</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="TabLayoutTextStyle">
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="MovieCardViewTheme" parent="CardView">
+        <item name="cardElevation">1dp</item>
+        <item name="cardCornerRadius">5dp</item>
+        <item name="android:layout_marginLeft">@dimen/card_view_horizontal</item>
+        <item name="android:layout_marginRight">@dimen/card_view_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/card_view_vertical</item>
+        <item name="android:layout_marginBottom">@dimen/card_view_vertical</item>
+    </style>
+
+    <style name="ReviewCardViewTheme" parent="MovieCardViewTheme">
+        <item name="cardCornerRadius">2dp</item>
+        <item name="cardElevation">1dp</item>
+        <item name="cardBackgroundColor">@color/colorWhite</item>
+        <item name="android:layout_marginLeft">@dimen/review_card_horizontal</item>
+        <item name="android:layout_marginRight">@dimen/review_card_horizontal</item>
+        <item name="android:layout_marginTop">@dimen/review_card_vertical</item>
+        <item name="android:layout_marginBottom">@dimen/review_card_vertical</item>
+    </style>
+
+</resources>

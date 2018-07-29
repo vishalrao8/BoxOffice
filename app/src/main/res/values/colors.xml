@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="statusBar">#B7B7B7</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorGrey">#F5F5F5</color>
+    <color name="colorDarkGrey">#E5E5E5</color>
+    <color name="colorWhite">#FFFFFF</color>
+
+    <color name="marginColor">#E0E0E0</color>
+    <color name="likesCountColor">#616161</color>
+    <color name="greyTextColor">#424242</color>
+
+    <color name="colorRed">#FF0000</color>
+    <color name="colorRedAlpha50">#EBA9A9</color>
+
+    <color name="snackBarSuccess">#6EC071</color>
+</resources>

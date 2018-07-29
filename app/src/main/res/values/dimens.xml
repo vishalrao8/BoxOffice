@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="card_view_horizontal">8dp</dimen>
+    <dimen name="card_view_vertical">8dp</dimen>
+
+    <dimen name="toolbar_height">70dp</dimen>
+    <dimen name="tab_layout_height">34dp</dimen>
+
+    <dimen name="review_card_horizontal">8dp</dimen>
+    <dimen name="review_card_vertical">4dp</dimen>
+
+    <dimen name="genre_view_horizontal">4dp</dimen>
+
+</resources>
