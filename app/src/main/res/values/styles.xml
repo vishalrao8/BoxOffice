@@ -8,18 +8,18 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
-        <item name="android:fitsSystemWindows">true</item>
         <item name="android:statusBarColor">@color/colorBlack</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <style name="ErrorTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/error_screen</item>
+        <item name="android:statusBarColor">@color/colorWhite</item>
     </style>
 
     <style name="MovieListTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:colorPrimaryDark">@color/statusBar</item>
+        <item name="android:statusBarColor">@color/colorGrey</item>
     </style>
 
     <style name="MovieDetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -30,7 +30,10 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:backgroundDimEnabled">false</item>
+    </style>
 
+    <style name="ReviewDetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/colorGrey</item>
     </style>
 
     <style name="ToolbarTitleStyle">

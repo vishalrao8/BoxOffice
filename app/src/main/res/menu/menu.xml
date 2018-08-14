@@ -21,6 +21,12 @@
                     android:title="@string/sorted_by_popularity"
                     android:visible="true"
                     app:showAsAction="never"/>
+
+                <item
+                    android:id="@+id/favourite"
+                    android:title="@string/sorted_by_favourite"
+                    android:visible="true"
+                    app:showAsAction="never"/>
             </group>
         </menu>
 

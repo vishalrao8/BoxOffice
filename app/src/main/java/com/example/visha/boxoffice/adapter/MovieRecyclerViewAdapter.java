@@ -1,8 +1,10 @@
 package com.example.visha.boxoffice.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.example.visha.boxoffice.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,13 +25,15 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     final private onClickListener mOnClickListener;
     private List<Movie> movies;
+    private Context context;
 
     public interface onClickListener {
         void onViewClicked(int position);
     }
 
-    public MovieRecyclerViewAdapter(List<Movie> movies, onClickListener listener) {
+    public MovieRecyclerViewAdapter(Context context, List<Movie> movies, onClickListener listener) {
 
+        this.context = context;
         mOnClickListener = listener;
         this.movies = movies;
 
@@ -59,6 +64,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
         Picasso.get()
                 .load("https://image.tmdb.org/t/p/w342" + movies.get(position).getPosterPath())
+                .placeholder(Objects.requireNonNull(context.getDrawable(R.color.colorWhite)))
                 .into(holder.movieTile);
 
     }

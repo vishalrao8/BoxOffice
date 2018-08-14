@@ -1,56 +1,89 @@
 package com.example.visha.boxoffice.activity;
 
-import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.visha.boxoffice.R;
 import com.example.visha.boxoffice.adapter.GenreRecyclerViewAdapter;
 import com.example.visha.boxoffice.adapter.ReviewRecyclerViewAdapter;
+import com.example.visha.boxoffice.api.ApiClient;
+import com.example.visha.boxoffice.api.ApiInterface;
+import com.example.visha.boxoffice.database.MovieDatabase;
+import com.example.visha.boxoffice.model.Movie;
+import com.example.visha.boxoffice.utils.UserPreferences;
+import com.example.visha.boxoffice.viewModel.MovieViewModeFactory;
+import com.example.visha.boxoffice.viewModel.MovieViewModel;
 import com.squareup.picasso.Picasso;
+import com.varunest.sparkbutton.SparkButton;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import static android.support.design.widget.Snackbar.LENGTH_INDEFINITE;
 import static android.support.design.widget.Snackbar.LENGTH_SHORT;
-import static android.view.View.GONE;
+import static com.example.visha.boxoffice.BuildConfig.API_KEY;
+import static com.example.visha.boxoffice.activity.MovieList.CONNECTION_FLAG;
+import static com.example.visha.boxoffice.activity.MovieList.POSITION;
+import static com.example.visha.boxoffice.activity.MovieList.appendToRequest;
 import static com.example.visha.boxoffice.activity.MovieList.lostConnection;
+import static com.example.visha.boxoffice.activity.ReviewDetail.MOVIE_POSITION;
+import static com.example.visha.boxoffice.activity.ReviewDetail.REVIEW_POSITION;
+import static com.example.visha.boxoffice.activity.SplashScreen.language;
 import static com.example.visha.boxoffice.activity.SplashScreen.movies;
+import static com.example.visha.boxoffice.utils.AppAnimation.animateGenreView;
+import static com.example.visha.boxoffice.utils.AppAnimation.animateRatingBar;
+import static com.example.visha.boxoffice.utils.AppAnimation.hideButton;
+import static com.example.visha.boxoffice.utils.AppAnimation.showButton;
+import static com.example.visha.boxoffice.utils.DateUtils.getFormattedDate;
+import static com.example.visha.boxoffice.utils.NetworkState.isConnected;
+import static com.example.visha.boxoffice.utils.View.createSnack;
+import static com.example.visha.boxoffice.utils.View.setUpCollapsingToolbarTitle;
+import static com.example.visha.boxoffice.utils.View.setUpLikeButton;
 
 @SuppressWarnings("WeakerAccess")
-public class MovieDetail extends AppCompatActivity {
+public class MovieDetail extends AppCompatActivity implements ReviewRecyclerViewAdapter.onClickListener{
 
     private int position;
+    private int flag;
+    private int ratingAverage;
     private String videoID;
+
+    public static final int ONLINE = 1;
+    public static final int OFFLINE = 2;
+
+    private MovieDatabase mDb;
+
+    @BindView(R.id.heart_button)
+    SparkButton likeButton;
 
     @BindView(R.id.certificate_tv)
     TextView certificate;
@@ -73,8 +106,8 @@ public class MovieDetail extends AppCompatActivity {
     @BindView(R.id.movie_title_toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.collapse_toolbar)
-    CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.app_bar)
+    AppBarLayout appBarLayout;
 
     @BindView(R.id.release_date_tv)
     TextView releaseDate;
@@ -109,12 +142,6 @@ public class MovieDetail extends AppCompatActivity {
     private ConnectivityManager.NetworkCallback networkCallback;
     private NetworkRequest networkRequest;
 
-    private void showTrailerButton() {
-
-        trailerButton.animate().translationYBy(-trailerButton.getLayoutParams().height-30).setDuration(650);
-
-    }
-
     private void redirectToYoutube() {
 
         if (videoID != null) {
@@ -127,7 +154,7 @@ public class MovieDetail extends AppCompatActivity {
                 startActivity(toWeb);
             }
         } else
-            createSnack("No trailer available", LENGTH_SHORT);
+            createSnack(parentLayout, "No trailer available", LENGTH_SHORT);
     }
 
     private String fetchOfficialVideoID() {
@@ -154,46 +181,23 @@ public class MovieDetail extends AppCompatActivity {
         return ID;
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private void createSnack(String message, int length, int backgroundRes) {
-
-        Snackbar snackbar = Snackbar.make(parentLayout, message, length);
-        View snackView = snackbar.getView();
-
-        snackView.setBackgroundColor(backgroundRes);
-
-        TextView snackBarText = snackView.findViewById(android.support.design.R.id.snackbar_text);
-        snackBarText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        snackbar.show();
-
-    }
-
-    private void createSnack(String message, int length) {
-
-        Snackbar snackbar = Snackbar.make(parentLayout, message, length);
-        View snackView = snackbar.getView();
-
-        TextView snackBarText = snackView.findViewById(android.support.design.R.id.snackbar_text);
-        snackBarText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        snackbar.show();
-
-    }
-
     private void setUpRecyclerView() {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        genreRecyclerView.setLayoutManager(linearLayoutManager);
-        reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ReviewRecyclerViewAdapter reviewAdapter = new ReviewRecyclerViewAdapter(movies.get(position).getReviews().getReviewResults());
-        reviewsRecyclerView.setAdapter(reviewAdapter);
+        genreRecyclerView.setLayoutManager(linearLayoutManager);
 
         GenreRecyclerViewAdapter genreAdapter = new GenreRecyclerViewAdapter(movies.get(position).getGenres());
         genreRecyclerView.setAdapter(genreAdapter);
 
+        if (flag == ONLINE) {
+
+            reviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+            ReviewRecyclerViewAdapter reviewAdapter = new ReviewRecyclerViewAdapter(movies.get(position).getReviews().getReviewResults(), this);
+            reviewsRecyclerView.setAdapter(reviewAdapter);
+        }
     }
 
     private void setUpNetworkCallback(){
@@ -205,11 +209,16 @@ public class MovieDetail extends AppCompatActivity {
             @Override
             public void onAvailable(Network network) {
 
-                if (lostConnection){
+                if (lostConnection) {
 
-                    createSnack(getString(R.string.snack_bar_welcome_text), LENGTH_SHORT, ContextCompat.getColor(getApplicationContext(), R.color.snackBarSuccess));
                     lostConnection = false;
+                    showTrailerButtonIfOnline();
+                    if (flag == OFFLINE) {
 
+                        flag = ONLINE;
+                        makeNetworkRequest();
+
+                    }
                 }
             }
 
@@ -217,11 +226,22 @@ public class MovieDetail extends AppCompatActivity {
             public void onLost(Network network) {
 
                 lostConnection = true;
-                createSnack(getString(R.string.snack_bar_error_text), LENGTH_INDEFINITE);
+                hideButton(trailerButton);
 
             }
         };
     }
+
+    private void showTrailerButtonIfOnline () {
+
+        if (isConnected(connectivityManager)) {
+            if (fetchOfficialVideoID() != null)
+                showButton(trailerButton);
+            else
+                showTrailerButtonIfOnline();
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -235,6 +255,41 @@ public class MovieDetail extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void makeNetworkRequest () {
+
+        final ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<Movie> call = apiInterface.getMovieDetail(movies.get(position).getId(), API_KEY, appendToRequest, language);
+
+        call.enqueue(new Callback<Movie>() {
+            @Override
+            public void onResponse(@NonNull Call<Movie> call, Response<Movie> response) {
+
+                movies.get(position).setVideoCollection(Objects.requireNonNull(response.body()).getVideoCollection());
+                movies.get(position).setReviews(Objects.requireNonNull(response.body()).getReviews());
+
+                videoID = fetchOfficialVideoID();
+                setUpRecyclerView();
+                showReviews();
+                Picasso.get()
+                        .load("https://image.tmdb.org/t/p/w780" + movies.get(position).getBackdropPath())
+                        .placeholder(Objects.requireNonNull(getDrawable(R.color.colorBlack)))
+                        .into(backdrop);
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
+
+                if (isConnected(connectivityManager)) {
+                    makeNetworkRequest();
+                } else
+                    flag = OFFLINE;
+
+            }
+        });
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -242,81 +297,86 @@ public class MovieDetail extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
 
-        showTrailerButton();
+        mDb = MovieDatabase.getInstance(getApplicationContext());
+
+        setUpNetworkCallback();
+
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        setUpCollapsingToolbarTitle(this, appBarLayout, toolbar);
 
-        position = getIntent().getIntExtra("position", -1);
+        position = getIntent().getIntExtra(POSITION, -1);
+        flag = getIntent().getIntExtra(CONNECTION_FLAG, ONLINE);
 
         // Setting up required attributes on creating activity
         if (position != -1) {
 
             populateUI();
             setUpRecyclerView();
-            setUpNetworkCallback();
 
         }
     }
 
-    private void animateRatingBar(int progress) {
+    private void showReviews() {
 
+        if (!movies.get(position).getReviews().getReviewResults().isEmpty()) {
 
-        ObjectAnimator progressBarAnimator = ObjectAnimator.ofInt(averageVoteBar, "progress", progress);
-        progressBarAnimator.setDuration(1500);
-        //progressBarAnimator.setInterpolator(new DecelerateInterpolator());
-        progressBarAnimator.start();
+            reviewHeader.setVisibility(View.VISIBLE);
+            reviewsRecyclerView.setVisibility(View.VISIBLE);
 
+        }
     }
 
-    private void animateGenreView() {
+    private void checkIfFavourite () {
 
-
-        genreRecyclerView.postDelayed(new Runnable() {
+        int movieId = movies.get(position).getId();
+        final MovieViewModel movieViewModel = new MovieViewModeFactory(mDb, movieId).create(MovieViewModel.class);
+        movieViewModel.getMovieLiveData().observe(this, new Observer<Movie>() {
             @Override
-            public void run() {
-                genreRecyclerView.setVisibility(View.VISIBLE);
+            public void onChanged(@Nullable Movie movie) {
+                movieViewModel.getMovieLiveData().removeObserver(this);
+
+                if (movie != null)
+                    likeButton.setChecked(true);
             }
-        },200);
-
+        });
     }
 
-    private void hideOnNoReviews() {
+    private void moveToReviewDetail (int reviewPosition) {
 
-        if (movies.get(position).getReviews().getReviewResults().size() == 0) {
-
-            reviewHeader.setVisibility(GONE);
-            reviewsRecyclerView.setVisibility(GONE);
-
-        }
-    }
-
-    private String getFormattedDate() {
-
-        String rawReleaseString = movies.get(position).getReleaseDate();
-
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
-        Date rawReleaseDate = new Date();
-
-        try {
-            rawReleaseDate = dateParser.parse(rawReleaseString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormatter = new SimpleDateFormat("MMMM dd, yyyy");
-        return dateFormatter.format(rawReleaseDate);
+        Intent intent = new Intent(this, ReviewDetail.class);
+        intent.putExtra(REVIEW_POSITION, reviewPosition);
+        intent.putExtra(MOVIE_POSITION, position);
+        startActivity(intent);
 
     }
 
     private void populateUI() {
 
-        videoID = fetchOfficialVideoID();
-        int ratingAverage = movies.get(position).getVoteAverage().intValue();
+        if (flag == ONLINE) {
+
+            showTrailerButtonIfOnline();
+            videoID = fetchOfficialVideoID();
+
+            Picasso.get()
+                    .load("https://image.tmdb.org/t/p/w780" + movies.get(position).getBackdropPath())
+                    .placeholder(Objects.requireNonNull(getDrawable(R.color.colorBlack)))
+                    .into(backdrop);
+
+            showReviews();
+
+        }
+
+        if (UserPreferences.getSavedState(getApplicationContext()) == UserPreferences.FAVOURITE)
+            ratingAverage = movies.get(position).getVoteAverage().intValue()/10;
+        else
+            ratingAverage = movies.get(position).getVoteAverage().intValue();
+
         String ratingAverageString = ratingAverage + getString(R.string.percentage_sign);
 
         movieTitle.setText(movies.get(position).getTitle());
         movieTitle.setSelected(true);
-        releaseDate.setText(getFormattedDate());
+        releaseDate.setText(getFormattedDate(position));
         description.setText(movies.get(position).getOverview());
         ratingCount.setText(String.valueOf(movies.get(position).getVoteCount()));
         ratingAverageTv.setText(ratingAverageString);
@@ -324,22 +384,10 @@ public class MovieDetail extends AppCompatActivity {
         if (movies.get(position).isAdult())
             certificate.setText("A");
 
-        Picasso.get()
-                .load("https://image.tmdb.org/t/p/w780" + movies.get(position).getBackdropPath())
-                .placeholder(Objects.requireNonNull(getDrawable(R.color.colorBlack)))
-                .into(backdrop);
-
-        hideOnNoReviews();
-        animateGenreView();
-        animateRatingBar(ratingAverage);
-    }
-
-    /* A method returning current network state */
-    private boolean isConnected(){
-
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-
+        checkIfFavourite();
+        animateGenreView(genreRecyclerView);
+        setUpLikeButton(mDb, likeButton, position);
+        animateRatingBar(averageVoteBar, ratingAverage);
     }
 
     @Override
@@ -353,11 +401,10 @@ public class MovieDetail extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback);
-        if (!isConnected()){
+    }
 
-            lostConnection = true;
-            createSnack(getString(R.string.snack_bar_error_text), LENGTH_INDEFINITE);
-
-        }
+    @Override
+    public void onViewClicked(int reviewPosition) {
+        moveToReviewDetail(reviewPosition);
     }
 }

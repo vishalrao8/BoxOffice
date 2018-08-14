@@ -134,13 +134,15 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/roboto_light"
+        android:lineSpacingExtra="4sp"
         android:paddingBottom="16dp"
+        android:textAlignment="center"
         android:textColor="@color/colorBlack"
-        tools:text="This is all about movie."
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/margin_view"
         app:layout_constraintStart_toStartOf="@+id/margin_view"
-        app:layout_constraintTop_toBottomOf="@+id/margin_view" />
+        app:layout_constraintTop_toBottomOf="@+id/margin_view"
+        tools:text="This is all about movie." />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -158,11 +160,12 @@
         android:id="@+id/review_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="5dp"
         android:fontFamily="@font/roboto_medium"
         android:text="@string/review_title"
         android:textColor="@color/colorBlack"
-        android:textSize="13sp"
+        android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description_tv" />
@@ -173,6 +176,7 @@
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false"
         android:paddingBottom="50dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/review_header" />

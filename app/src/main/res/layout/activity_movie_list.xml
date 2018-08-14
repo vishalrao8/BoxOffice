@@ -9,13 +9,6 @@
     android:background="@color/colorDarkGrey"
     tools:ignore="Overdraw">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="@drawable/gradient_white"
-        android:layout_gravity="bottom"
-        android:elevation="1dp" />
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -53,10 +46,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorDarkGrey"
-        android:fitsSystemWindows="true"
+        android:fitsSystemWindows="false"
         android:layoutAnimation="@anim/grid_layout_animation"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     </com.example.visha.boxoffice.view.GridRecyclerView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@drawable/gradient_white"
+        android:layout_gravity="bottom"
+        android:fitsSystemWindows="true" />
+
+    <TextView
+        android:id="@+id/empty_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:text="@string/nothing_to_show"
+        android:textSize="18sp" />
 
 </android.support.design.widget.CoordinatorLayout>

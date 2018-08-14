@@ -26,7 +26,7 @@
         android:text="@string/certificate"
         android:textColor="@color/greyTextColor"
         android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/heart_icon"
+        app:layout_constraintEnd_toStartOf="@+id/heart_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,7 +42,7 @@
         android:textColor="@color/greyTextColor"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/heart_icon"
+        app:layout_constraintStart_toEndOf="@+id/heart_button"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -88,13 +88,13 @@
         android:layout_height="0dp"
         android:background="@drawable/like_button_view"
         android:elevation="4dp"
-        app:layout_constraintBottom_toBottomOf="@id/heart_icon"
-        app:layout_constraintEnd_toEndOf="@id/heart_icon"
-        app:layout_constraintStart_toStartOf="@id/heart_icon"
-        app:layout_constraintTop_toTopOf="@id/heart_icon" />
+        app:layout_constraintBottom_toBottomOf="@id/heart_button"
+        app:layout_constraintEnd_toEndOf="@id/heart_button"
+        app:layout_constraintStart_toStartOf="@id/heart_button"
+        app:layout_constraintTop_toTopOf="@id/heart_button" />
 
     <com.varunest.sparkbutton.SparkButton
-        android:id="@+id/heart_icon"
+        android:id="@+id/heart_button"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:elevation="4dp"

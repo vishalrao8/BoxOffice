@@ -12,6 +12,4 @@
 
     <color name="colorRed">#FF0000</color>
     <color name="colorRedAlpha50">#EBA9A9</color>
-
-    <color name="snackBarSuccess">#6EC071</color>
 </resources>

@@ -45,6 +45,9 @@
             android:name=".activity.ErrorScreen"
             android:screenOrientation="portrait"
             android:theme="@style/ErrorTheme" />
+        <activity
+            android:name=".activity.ReviewDetail"
+            android:theme="@style/MovieListTheme" />
     </application>
 
 </manifest>

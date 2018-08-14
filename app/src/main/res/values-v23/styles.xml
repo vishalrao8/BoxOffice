@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ReviewDetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/colorGrey</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="MovieListTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/colorGrey</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

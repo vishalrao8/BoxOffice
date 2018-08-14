@@ -1,17 +1,16 @@
 package com.example.visha.boxoffice.activity;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,15 +21,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.visha.boxoffice.R;
 import com.example.visha.boxoffice.adapter.MovieRecyclerViewAdapter;
 import com.example.visha.boxoffice.api.ApiClient;
 import com.example.visha.boxoffice.api.ApiInterface;
+import com.example.visha.boxoffice.utils.UserPreferences;
 import com.example.visha.boxoffice.view.GridRecyclerView;
 import com.example.visha.boxoffice.model.Movie;
 import com.example.visha.boxoffice.model.MoviesResponse;
+import com.example.visha.boxoffice.viewModel.FavouriteMoviesViewModel;
 
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -40,14 +43,28 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.support.design.widget.Snackbar.LENGTH_INDEFINITE;
-import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static com.example.visha.boxoffice.BuildConfig.API_KEY;
+import static com.example.visha.boxoffice.activity.MovieDetail.OFFLINE;
+import static com.example.visha.boxoffice.activity.MovieDetail.ONLINE;
 import static com.example.visha.boxoffice.activity.SplashScreen.language;
 import static com.example.visha.boxoffice.activity.SplashScreen.movies;
-import static com.example.visha.boxoffice.activity.SplashScreen.sortedByRating;
+import static com.example.visha.boxoffice.utils.NetworkState.isConnected;
+import static com.example.visha.boxoffice.utils.UserPreferences.FAVOURITE;
+import static com.example.visha.boxoffice.utils.UserPreferences.POPULAR;
+import static com.example.visha.boxoffice.utils.UserPreferences.TOP_RATED;
+import static com.example.visha.boxoffice.utils.UserPreferences.getSavedState;
+import static com.example.visha.boxoffice.utils.View.createSnack;
+import static com.example.visha.boxoffice.utils.View.hideSnack;
+import static com.example.visha.boxoffice.utils.View.hideText;
+import static com.example.visha.boxoffice.utils.View.setUpTabLayoutTitle;
+import static com.example.visha.boxoffice.utils.View.showText;
 
 @SuppressWarnings({"WeakerAccess", "SameParameterValue"})
 public class MovieList extends AppCompatActivity implements MovieRecyclerViewAdapter.onClickListener {
+
+    public static final String POSITION = "position";
+    public static final String CONNECTION_FLAG = "flag";
+    private List<Movie> favMovies;
 
     @BindView(R.id.parent_layout)
     CoordinatorLayout parentLayout;
@@ -61,20 +78,22 @@ public class MovieList extends AppCompatActivity implements MovieRecyclerViewAda
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
 
-    private SharedPreferences sharedPreferences;
+    @BindView(R.id.empty_tv)
+    TextView emptyNotifier;
 
     // An variable holding status of current connection
-    public static boolean lostConnection = false;
+    public static boolean lostConnection;
 
     private ConnectivityManager connectivityManager;
     private ConnectivityManager.NetworkCallback networkCallback;
     private NetworkRequest networkRequest;
 
     private final ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+    private Call<MoviesResponse> call;
 
     private MovieRecyclerViewAdapter recyclerViewAdapter;
 
-    private final static String appendToRequest = "videos,reviews";
+    public final static String appendToRequest = "videos,reviews";
 
     private void setUpNetworkCallback (){
 
@@ -87,7 +106,7 @@ public class MovieList extends AppCompatActivity implements MovieRecyclerViewAda
 
                 if (lostConnection){
 
-                    createSnack(getString(R.string.snack_bar_welcome_text), LENGTH_SHORT, ContextCompat.getColor(getApplicationContext(), R.color.snackBarSuccess));
+                    hideSnack();
                     lostConnection = false;
 
                 }
@@ -98,13 +117,13 @@ public class MovieList extends AppCompatActivity implements MovieRecyclerViewAda
             public void onLost(Network network) {
 
                 lostConnection = true;
-                createSnack(getString(R.string.snack_bar_error_text), LENGTH_INDEFINITE);
+                createSnack(parentLayout, getString(R.string.snack_bar_error_text), LENGTH_INDEFINITE);
 
             }
         };
     }
 
-    private void setUpRecyclerView (){
+    private void setUpMovieTiles(){
 
         int spanCount;
 
@@ -117,80 +136,42 @@ public class MovieList extends AppCompatActivity implements MovieRecyclerViewAda
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(layoutManager);
 
-        recyclerViewAdapter = new MovieRecyclerViewAdapter(movies, this);
+        recyclerViewAdapter = new MovieRecyclerViewAdapter(this, movies, this);
         recyclerView.setAdapter(recyclerViewAdapter);
 
     }
 
-    private void setUpTabLayoutTitle(){
-
-        // Updating Tab layout's text based on user's preferences, showing currently sorted order
-        if (sortedByRating)
-            Objects.requireNonNull(tabLayout.getTabAt(0)).setText(getString(R.string.sorted_by_rating));
-        else
-            Objects.requireNonNull(tabLayout.getTabAt(0)).setText(getString(R.string.sorted_by_popularity));
-
-    }
-
-    private void createSnack (String message, int length, int backgroundRes) {
-
-        Snackbar snackbar = Snackbar.make(parentLayout, message, length);
-        View snackView = snackbar.getView();
-
-        // SnackBar with custom background
-        snackView.setBackgroundColor(backgroundRes);
-
-        // Aligning text of SnackBar to the centre
-        TextView snackBarText = snackView.findViewById(android.support.design.R.id.snackbar_text);
-        snackBarText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        snackbar.show();
-
-    }
-
-    private void createSnack(String message, int length) {
-
-        Snackbar snackbar = Snackbar.make(parentLayout, message, length);
-        View snackView = snackbar.getView();
-
-        // Aligning text of SnackBar to the centre
-        TextView snackBarText = snackView.findViewById(android.support.design.R.id.snackbar_text);
-        snackBarText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-
-        snackbar.show();
-
-    }
-
-    private void populateUIWithData(){
+    private void populateUIWithData(List<Movie> newMovieList){
 
         // Updating Recycler view and Tab layout with new data
-        recyclerViewAdapter.setNewList(movies);
-        recyclerView.scheduleLayoutAnimation();
-        setUpTabLayoutTitle();
+        if (newMovieList != null && !newMovieList.isEmpty()) {
+
+            recyclerViewAdapter.setNewList(newMovieList);
+            recyclerView.scheduleLayoutAnimation();
+            hideText(recyclerView, emptyNotifier);
+
+        } else {
+            showText(recyclerView, emptyNotifier);
+        }
+        setUpTabLayoutTitle(this, tabLayout);
 
     }
 
-    private void toggleSortBy(){
-
-        Call<MoviesResponse> call;
-
-        if (sortedByRating)
-            call = apiInterface.getTopRatedMovies(API_KEY, language);
-        else
-            call = apiInterface.getPopularMovies(API_KEY, language);
-
+    private void makeNetworkRequest() {
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(@NonNull Call<MoviesResponse> call, @NonNull Response<MoviesResponse> response) {
 
                 movies = Objects.requireNonNull(response.body()).getResults();
-                populateUIWithData();
+                populateUIWithData(movies);
             }
 
             @Override
             public void onFailure(@NonNull Call<MoviesResponse> call, @NonNull Throwable t) {
 
-                Log.e("Failed", t.toString());
+                if (isConnected(connectivityManager))
+                    makeNetworkRequest();
+
             }
         });
     }
@@ -201,10 +182,21 @@ public class MovieList extends AppCompatActivity implements MovieRecyclerViewAda
         getMenuInflater().inflate(R.menu.menu, menu);
 
         // Updating corresponding item to be checked based on user's preferences
-        if (sortedByRating)
-            menu.findItem(R.id.top_rated).setChecked(true);
-        else
-            menu.findItem(R.id.most_popular).setChecked(true);
+        switch (UserPreferences.getSavedState(getApplicationContext())) {
+
+            case TOP_RATED :
+                menu.findItem(R.id.top_rated).setChecked(true);
+                break;
+
+            case POPULAR :
+                menu.findItem(R.id.most_popular).setChecked(true);
+                break;
+
+            default:
+                menu.findItem(R.id.favourite).setChecked(true);
+                break;
+
+        }
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -212,58 +204,79 @@ public class MovieList extends AppCompatActivity implements MovieRecyclerViewAda
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (isConnected()) {
+        /* Updating user's preferences based on "Sort by" order selected */
+        switch (item.getItemId()) {
 
-            /* Updating user's preferences based on "Sort by" order selected */
-            switch (item.getItemId()) {
-                case R.id.top_rated:
+            case R.id.top_rated:
 
-                    if (!sortedByRating) {
+                if (UserPreferences.getSavedState(getApplicationContext()) != TOP_RATED && isConnected(connectivityManager)) {
+                    call = apiInterface.getTopRatedMovies(API_KEY, language);
+                    makeNetworkRequest();
+                    toggleOrder(TOP_RATED, item);
 
-                        sortedByRating = true;
-                        sharedPreferences.edit().putBoolean(getString(R.string.preferences_saved_tag), sortedByRating).apply();
-                        item.setChecked(true);
-                        // Fetching corresponding data via API after "Sort by" order toggled
-                        toggleSortBy();
-                        return true;
-
-                    } else
-                        return false;
-
-                case R.id.most_popular:
-
-                    if (sortedByRating) {
-
-                        sortedByRating = false;
-                        sharedPreferences.edit().putBoolean(getString(R.string.preferences_saved_tag), sortedByRating).apply();
-                        item.setChecked(true);
-                        // Fetching corresponding data via API after "Sort by" order toggled
-                        toggleSortBy();
-                        return true;
-
-                    } else
-                        return false;
-
-                default:
+                    return true;
+                } else
                     return false;
-            }
 
-        } else {
+            case R.id.most_popular:
 
-            createSnack(getString(R.string.snack_bar_error_text_forced), LENGTH_INDEFINITE);
-            return false;
+                if (UserPreferences.getSavedState(getApplicationContext()) != POPULAR && isConnected(connectivityManager)) {
+                    call = apiInterface.getPopularMovies(API_KEY, language);
+                    makeNetworkRequest();
+                    toggleOrder(POPULAR, item);
 
+                    return true;
+                } else
+                    return false;
+
+            case R.id.favourite:
+
+                if (getSavedState(getApplicationContext()) != FAVOURITE) {
+                    toggleOrder(FAVOURITE, item);
+                    movies = favMovies;
+                    populateUIWithData(favMovies);
+
+                    return true;
+                } else
+                    return false;
+
+            default:
+                return false;
         }
+    }
+
+    private void toggleOrder (int order, MenuItem item) {
+
+        UserPreferences.updateUserPreferences(getApplicationContext(), order);
+        item.setChecked(true);
 
     }
 
-    private void moveToMovieDetails(int position) {
+    private void moveToMovieDetails(int position, int flag) {
 
         Intent intent = new Intent(this, MovieDetail.class);
-        intent.putExtra("position", position);
+        intent.putExtra(POSITION, position);
+        intent.putExtra(CONNECTION_FLAG, flag);
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down);
 
+    }
+
+    private void setUpFavMoviesViewModel () {
+
+        FavouriteMoviesViewModel favouriteMoviesViewModel = ViewModelProviders.of(this).get(FavouriteMoviesViewModel.class);
+
+        favouriteMoviesViewModel.getFavMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> newFavMovies) {
+                favMovies = newFavMovies;
+                if (getSavedState(getApplicationContext()) == FAVOURITE) {
+
+                    movies = favMovies;
+                    populateUIWithData(movies);
+
+                }
+            }
+        });
     }
 
     @Override
@@ -274,54 +287,57 @@ public class MovieList extends AppCompatActivity implements MovieRecyclerViewAda
 
         setSupportActionBar(toolbar);
 
-        // Accessing user's saved preferences to be edited
-        sharedPreferences = getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE);
-        sortedByRating = sharedPreferences.getBoolean(getString(R.string.preferences_saved_tag), getResources().getBoolean(R.bool.sorted_by_rating_default));
+        checkIfEmpty();
 
         // Setting up required attributes on creating activity
-        setUpRecyclerView();
-        setUpTabLayoutTitle();
+        setUpMovieTiles();
+        setUpTabLayoutTitle(this, tabLayout);
         setUpNetworkCallback();
+        setUpFavMoviesViewModel();
+    }
+
+    private void checkIfEmpty() {
+
+        if (movies == null || movies.isEmpty()) {
+            showText(recyclerView, emptyNotifier);
+        } else {
+            hideText(recyclerView, emptyNotifier);
+        }
     }
 
     @Override
     public void onViewClicked(final int position) {
 
-        if (isConnected()) {
+        if (isConnected(connectivityManager)) {
 
             // Fetching additional details related to the currently selected movie tile
             Call<Movie> call = apiInterface.getMovieDetail(movies.get(position).getId(), API_KEY, appendToRequest, language);
 
             call.enqueue(new Callback<Movie>() {
                 @Override
-                public void onResponse(@NonNull Call<Movie> call, @NonNull Response<Movie> response) {
+                public void onResponse(@NonNull Call<Movie> call, Response<Movie> response) {
 
                     movies.get(position).setGenres(Objects.requireNonNull(response.body()).getGenres());
                     movies.get(position).setVideoCollection(Objects.requireNonNull(response.body()).getVideoCollection());
                     movies.get(position).setReviews(Objects.requireNonNull(response.body()).getReviews());
 
-                    moveToMovieDetails(position);
+                    moveToMovieDetails(position, ONLINE);
 
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
 
-                    Log.e("Failed", t.toString());
+                    Toast.makeText(MovieList.this, "Please try again later!", Toast.LENGTH_SHORT).show();
 
                 }
             });
 
-        } else
-            createSnack(getString(R.string.snack_bar_error_text_forced), LENGTH_INDEFINITE);
-    }
+        } else if (UserPreferences.getSavedState(getApplicationContext()) == FAVOURITE) {
 
-    /* A method returning current network state */
-    private boolean isConnected(){
+            moveToMovieDetails(position, OFFLINE);
 
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-
+        }
     }
 
     @Override
@@ -334,10 +350,15 @@ public class MovieList extends AppCompatActivity implements MovieRecyclerViewAda
     protected void onResume() {
         super.onResume();
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback);
-        if (!isConnected()){
+        if (!isConnected(connectivityManager)){
 
             lostConnection = true;
-            createSnack(getString(R.string.snack_bar_error_text), LENGTH_INDEFINITE);
+            createSnack(parentLayout, getString(R.string.snack_bar_error_text), LENGTH_INDEFINITE);
+
+        } else {
+
+            lostConnection = false;
+            hideSnack();
 
         }
     }

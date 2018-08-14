@@ -22,11 +22,17 @@ import butterknife.ButterKnife;
 public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecyclerViewAdapter.ReviewViewHolder>{
 
     private final List<Reviews.ReviewResults> reviews;
+    private final onClickListener mOnClickListener;
 
-    public ReviewRecyclerViewAdapter (List<Reviews.ReviewResults> reviews) {
+    public ReviewRecyclerViewAdapter (List<Reviews.ReviewResults> reviews, onClickListener onClickListener) {
 
+        mOnClickListener = onClickListener;
         this.reviews = reviews;
 
+    }
+
+    public interface onClickListener {
+        void onViewClicked(int reviewPosition);
     }
 
     @NonNull
@@ -48,7 +54,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         String authorName = reviews.get(position).getAuthor();
 
         ColorGenerator generator = ColorGenerator.MATERIAL;
-        int color = generator.getRandomColor();
+        int color = generator.getColor(position);
 
         TextDrawable drawable = TextDrawable.builder()
                                 .buildRound(authorName.substring(0,1), color);
@@ -64,7 +70,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         return reviews.size();
     }
 
-    class ReviewViewHolder extends RecyclerView.ViewHolder {
+    class ReviewViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.review_tv)
         TextView reviewTv;
@@ -79,7 +85,13 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
 
             super(itemView);
             ButterKnife.bind(this,itemView);
+            itemView.setOnClickListener(this);
 
+        }
+
+        @Override
+        public void onClick(View view) {
+            mOnClickListener.onViewClicked(getAdapterPosition());
         }
     }
 

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.visha.boxoffice.R;
+import com.example.visha.boxoffice.utils.UserPreferences;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +61,15 @@ public class ErrorScreen extends AppCompatActivity implements View.OnClickListen
 
     }
 
+    private void moveToMovieList () {
+
+        UserPreferences.updateUserPreferences(getApplicationContext(), UserPreferences.FAVOURITE);
+        Intent intent = new Intent(this, MovieList.class);
+        startActivity(intent);
+        finish();
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -68,7 +78,7 @@ public class ErrorScreen extends AppCompatActivity implements View.OnClickListen
         ButterKnife.bind(this);
 
         Snackbar.make(parentLayout, getString(R.string.snack_bar_error_text), LENGTH_INDEFINITE)
-                .setAction(R.string.snack_bar_action_text, this)
+                .setAction(R.string.show_favourites, this)
                 .show();
 
         // Setting up network callback on creating activity
@@ -78,12 +88,8 @@ public class ErrorScreen extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View view) {
 
-        if (!isConnected())
-            Snackbar.make(parentLayout, getString(R.string.snack_bar_error_text), LENGTH_INDEFINITE)
-                    .setAction(R.string.snack_bar_action_text, ErrorScreen.this)
-                    .show();
-        else
-            moveToPreviousActivity();
+        moveToMovieList();
+
     }
 
     @Override

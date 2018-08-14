@@ -1,15 +1,16 @@
 <resources>
 
     <string name="preferences_name">sorted_preference</string>
-    <string name="preferences_saved_tag">sortedByRating</string>
+    <string name="preferences_saved_tag">sorted_state</string>
     <string name="message_tag_to_error_screen">comingFromActivity</string>
 
     <string name="app_name">Box Office</string>
     <string name="sorted_by_rating">Top Rated</string>
     <string name="sorted_by_popularity">Most Popular</string>
+    <string name="sorted_by_favourite">Favourite</string>
 
     <string name="snack_bar_error_text">No internet connection</string>
-    <string name="snack_bar_action_text">RETRY</string>
+    <string name="show_favourites">Show favourites</string>
     <string name="snack_bar_welcome_text">Back online</string>
     <string name="snack_bar_error_text_forced">No internet connection! Please try again later</string>
 
@@ -21,4 +22,6 @@
     <string name="percentage_sign">%</string>
 
     <string name="review_title">Reviews</string>
+
+    <string name="nothing_to_show">"Nothing to show!"</string>
 </resources>
