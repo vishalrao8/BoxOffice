@@ -16,10 +16,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -313,6 +311,7 @@ public class MovieList extends AppCompatActivity implements MovieRecyclerViewAda
             // Fetching additional details related to the currently selected movie tile
             Call<Movie> call = apiInterface.getMovieDetail(movies.get(position).getId(), API_KEY, appendToRequest, language);
 
+            //noinspection NullableProblems
             call.enqueue(new Callback<Movie>() {
                 @Override
                 public void onResponse(@NonNull Call<Movie> call, Response<Movie> response) {

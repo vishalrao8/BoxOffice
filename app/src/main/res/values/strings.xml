@@ -1,7 +1,6 @@
 <resources>
 
     <string name="preferences_name">sorted_preference</string>
-    <string name="preferences_saved_tag">sorted_state</string>
     <string name="message_tag_to_error_screen">comingFromActivity</string>
 
     <string name="app_name">Box Office</string>
@@ -11,8 +10,6 @@
 
     <string name="snack_bar_error_text">No internet connection</string>
     <string name="show_favourites">Show favourites</string>
-    <string name="snack_bar_welcome_text">Back online</string>
-    <string name="snack_bar_error_text_forced">No internet connection! Please try again later</string>
 
     <string name="certificate">Certificate</string>
     <string name="release_date">Release Date</string>

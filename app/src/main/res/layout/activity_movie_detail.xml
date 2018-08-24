@@ -15,7 +15,7 @@
         android:translationY="35dp"
         android:layout_gravity="center|bottom"
         android:background="@drawable/trailer_button_background"
-        android:foreground="@drawable/trailer_button_ripple_effect"/>
+        android:foreground="@drawable/trailer_button_ripple_effect" />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -24,7 +24,6 @@
         android:fitsSystemWindows="false">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapse_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"

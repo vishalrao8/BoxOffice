@@ -2,16 +2,11 @@ package com.example.visha.boxoffice.utils;
 
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -64,13 +59,21 @@ public class View {
     public static void setUpTabLayoutTitle(Context context, TabLayout tabLayout){
 
         // Updating Tab layout's text based on user's preferences, showing currently sorted order
-        if (UserPreferences.getSavedState(context.getApplicationContext()) == TOP_RATED)
-            Objects.requireNonNull(tabLayout.getTabAt(0)).setText(context.getString(R.string.sorted_by_rating));
-        else if (UserPreferences.getSavedState(context.getApplicationContext()) == POPULAR)
-            Objects.requireNonNull(tabLayout.getTabAt(0)).setText(context.getString(R.string.sorted_by_popularity));
-        else
-            Objects.requireNonNull(tabLayout.getTabAt(0)).setText(context.getString(R.string.sorted_by_favourite));
+        switch (UserPreferences.getSavedState(context.getApplicationContext())) {
 
+            case TOP_RATED :
+                Objects.requireNonNull(tabLayout.getTabAt(0)).setText(context.getString(R.string.sorted_by_rating));
+                break;
+
+            case POPULAR :
+                Objects.requireNonNull(tabLayout.getTabAt(0)).setText(context.getString(R.string.sorted_by_popularity));
+                break;
+
+            default :
+                Objects.requireNonNull(tabLayout.getTabAt(0)).setText(context.getString(R.string.sorted_by_favourite));
+                break;
+
+        }
     }
 
     public static void setUpCollapsingToolbarTitle (final Context context, AppBarLayout appBarLayout, final Toolbar toolbar) {
@@ -83,7 +86,6 @@ public class View {
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (scrollRange == -1) {
                     scrollRange = appBarLayout.getTotalScrollRange();
-                    Log.e("SCROLL RANGE", String.valueOf(scrollRange));
                 }
                 if (verticalOffset + scrollRange <= scrollRange/2) {
 

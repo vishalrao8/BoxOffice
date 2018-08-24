@@ -45,14 +45,6 @@ public class ErrorScreen extends AppCompatActivity implements View.OnClickListen
         };
     }
 
-    /* A method returning current network state */
-    private boolean isConnected(){
-
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-
-    }
-
     private void moveToPreviousActivity(){
 
         Intent intent = new Intent(this, SplashScreen.class);

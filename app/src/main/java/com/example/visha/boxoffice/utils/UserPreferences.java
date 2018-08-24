@@ -19,8 +19,7 @@ public class UserPreferences {
 
     public static int getSavedState (Context context) {
 
-        int state = getSharedPreferences(context).getInt(context.getString(R.string.preferences_name), TOP_RATED);
-        return state;
+        return getSharedPreferences(context).getInt(context.getString(R.string.preferences_name), TOP_RATED);
 
     }
 

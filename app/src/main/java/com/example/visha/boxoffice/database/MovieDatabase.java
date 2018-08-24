@@ -3,7 +3,6 @@ package com.example.visha.boxoffice.database;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverter;
 import android.content.Context;
 
 import com.example.visha.boxoffice.model.Movie;
@@ -18,9 +17,11 @@ public abstract class MovieDatabase extends RoomDatabase {
     public static MovieDatabase getInstance (Context context) {
 
         if (sInstance == null) {
-            sInstance = Room.databaseBuilder(context.getApplicationContext(),
-                    MovieDatabase.class, databaseName)
-                    .build();
+            synchronized (LOCK) {
+                sInstance = Room.databaseBuilder(context.getApplicationContext(),
+                        MovieDatabase.class, databaseName)
+                        .build();
+            }
         }
         return sInstance;
 

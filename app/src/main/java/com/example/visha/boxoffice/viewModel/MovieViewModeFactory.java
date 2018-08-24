@@ -8,8 +8,8 @@ import com.example.visha.boxoffice.database.MovieDatabase;
 
 public class MovieViewModeFactory extends ViewModelProvider.NewInstanceFactory {
 
-    private MovieDatabase movieDatabase;
-    private int id;
+    private final MovieDatabase movieDatabase;
+    private final int id;
 
     public MovieViewModeFactory (MovieDatabase movieDatabase, int id) {
 
@@ -21,6 +21,7 @@ public class MovieViewModeFactory extends ViewModelProvider.NewInstanceFactory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        //noinspection unchecked
         return (T) new MovieViewModel(movieDatabase, id);
     }
 }

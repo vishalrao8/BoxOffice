@@ -9,8 +9,6 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.visha.boxoffice.R;
 
-import java.util.Objects;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -20,9 +18,11 @@ public class ReviewDetail extends AppCompatActivity {
 
     private int reviewPosition;
     private int moviePosition;
+
     public static final String REVIEW_POSITION = "review_position";
     public static final String MOVIE_POSITION = "movie_position";
-    public static final int DEFAULT_POSITION = -1;
+
+    private static final int DEFAULT_POSITION = -1;
 
     @BindView(R.id.review_tv)
     TextView reviewTv;
@@ -39,9 +39,6 @@ public class ReviewDetail extends AppCompatActivity {
         setContentView(R.layout.activity_review);
 
         ButterKnife.bind(this);
-
-        //setTitle(movies.get(moviePosition).getTitle());
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         reviewPosition = getIntent().getIntExtra(REVIEW_POSITION, DEFAULT_POSITION);
         moviePosition = getIntent().getIntExtra(MOVIE_POSITION, DEFAULT_POSITION);

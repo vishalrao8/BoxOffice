@@ -19,8 +19,7 @@ public class DataConverter {
         Gson gson = new Gson();
         Type type = new TypeToken<List<Genres>>() {
         }.getType();
-        String genresJson = gson.toJson(genres, type);
-        return genresJson;
+        return gson.toJson(genres, type);
     }
 
     @TypeConverter
@@ -31,7 +30,6 @@ public class DataConverter {
         Gson gson = new Gson();
         Type type = new TypeToken<List<Genres>>() {
         }.getType();
-        List<Genres> genres = gson.fromJson(genresJson, type);
-        return genres;
+        return gson.fromJson(genresJson, type);
     }
 }

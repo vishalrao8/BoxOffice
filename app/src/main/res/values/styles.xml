@@ -32,10 +32,6 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-    <style name="ReviewDetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/colorGrey</item>
-    </style>
-
     <style name="ToolbarTitleStyle">
         <item name="android:fontFamily">@font/fredoka_one</item>
         <item name="android:textColor">@color/colorBlack</item>

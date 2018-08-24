@@ -49,7 +49,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ReviewViewHolder holder, int position) {
 
         String authorName = reviews.get(position).getAuthor();
 
@@ -70,7 +70,7 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         return reviews.size();
     }
 
-    class ReviewViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ReviewViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         @BindView(R.id.review_tv)
         TextView reviewTv;
@@ -94,5 +94,4 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
             mOnClickListener.onViewClicked(getAdapterPosition());
         }
     }
-
 }

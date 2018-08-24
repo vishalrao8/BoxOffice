@@ -1,5 +1,6 @@
 package com.example.visha.boxoffice.activity;
 
+import android.annotation.TargetApi;
 import android.arch.lifecycle.Observer;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -7,25 +8,23 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkRequest;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.visha.boxoffice.R;
 import com.example.visha.boxoffice.adapter.GenreRecyclerViewAdapter;
@@ -49,7 +48,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.support.design.widget.Snackbar.LENGTH_SHORT;
 import static com.example.visha.boxoffice.BuildConfig.API_KEY;
 import static com.example.visha.boxoffice.activity.MovieList.CONNECTION_FLAG;
 import static com.example.visha.boxoffice.activity.MovieList.POSITION;
@@ -65,7 +63,6 @@ import static com.example.visha.boxoffice.utils.AppAnimation.hideButton;
 import static com.example.visha.boxoffice.utils.AppAnimation.showButton;
 import static com.example.visha.boxoffice.utils.DateUtils.getFormattedDate;
 import static com.example.visha.boxoffice.utils.NetworkState.isConnected;
-import static com.example.visha.boxoffice.utils.View.createSnack;
 import static com.example.visha.boxoffice.utils.View.setUpCollapsingToolbarTitle;
 import static com.example.visha.boxoffice.utils.View.setUpLikeButton;
 
@@ -74,11 +71,17 @@ public class MovieDetail extends AppCompatActivity implements ReviewRecyclerView
 
     private int position;
     private int flag;
-    private int ratingAverage;
-    private String videoID;
 
     public static final int ONLINE = 1;
     public static final int OFFLINE = 2;
+
+    private static final String YOUTUBE_APP_URL = "vnd.youtube:";
+    private static final String YOUTUBE_WEB_URL = "http://www.youtube.com/watch?v=";
+    private static final String BACKDROP_URL = "https://image.tmdb.org/t/p/w780";
+
+    private static final String NULL = "null";
+
+    private static final int DEFAULT_POSITION = -1;
 
     private MovieDatabase mDb;
 
@@ -99,9 +102,6 @@ public class MovieDetail extends AppCompatActivity implements ReviewRecyclerView
 
     @BindView(R.id.review_rv)
     RecyclerView reviewsRecyclerView;
-
-    @BindView(R.id.movie_detail_layout)
-    ConstraintLayout detailLayout;
 
     @BindView(R.id.movie_title_toolbar)
     Toolbar toolbar;
@@ -144,44 +144,53 @@ public class MovieDetail extends AppCompatActivity implements ReviewRecyclerView
 
     private void redirectToYoutube() {
 
-        if (videoID != null) {
-            Intent toYouTube = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + fetchOfficialVideoID()));
-            Intent toWeb = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + fetchOfficialVideoID()));
+        if (fetchOfficialVideoID() != null && !fetchOfficialVideoID().equals(NULL)) {
+
+            Intent toYouTube = new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_APP_URL + fetchOfficialVideoID()));
+            Intent toWeb = new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_WEB_URL + fetchOfficialVideoID()));
 
             try {
                 startActivity(toYouTube);
             } catch (ActivityNotFoundException e) {
                 startActivity(toWeb);
             }
-        } else
-            createSnack(parentLayout, "No trailer available", LENGTH_SHORT);
+
+        }
     }
 
-    private String fetchOfficialVideoID() {
+    private String fetchOfficialVideoID () {
 
         String ID = null;
         int count = 0;
-        int collectionSize = movies.get(position).getVideoCollection().getVideoResultsList().size();
 
-        for (int i = 0; i < collectionSize; i++) {
+        if (movies.get(position).getVideoCollection().getVideoResultsList() != null) {
 
-            if (movies.get(position).getVideoCollection().getVideoResultsList().get(i).getName().contains("Official")) {
+            int collectionSize = movies.get(position).getVideoCollection().getVideoResultsList().size();
 
-                ID = movies.get(position).getVideoCollection().getVideoResultsList().get(i).getKey();
-                break;
+            if (collectionSize == 0) {
+                return NULL;
+            }
 
-            } else {
-                count++;
+            for (int i = 0; i < collectionSize; i++) {
 
-                if (count == collectionSize)
-                    ID = movies.get(position).getVideoCollection().getVideoResultsList().get(0).getKey();
+                if (movies.get(position).getVideoCollection().getVideoResultsList().get(i).getName().contains("Official")) {
 
+                    ID = movies.get(position).getVideoCollection().getVideoResultsList().get(i).getKey();
+                    break;
+
+                } else {
+                    count++;
+
+                    if (count == collectionSize)
+                        ID = movies.get(position).getVideoCollection().getVideoResultsList().get(0).getKey();
+
+                }
             }
         }
         return ID;
     }
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView () {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -212,13 +221,12 @@ public class MovieDetail extends AppCompatActivity implements ReviewRecyclerView
                 if (lostConnection) {
 
                     lostConnection = false;
-                    showTrailerButtonIfOnline();
-                    if (flag == OFFLINE) {
 
-                        flag = ONLINE;
+                    if (flag == OFFLINE)
                         makeNetworkRequest();
+                    else
+                        showButton(trailerButton);
 
-                    }
                 }
             }
 
@@ -231,17 +239,6 @@ public class MovieDetail extends AppCompatActivity implements ReviewRecyclerView
             }
         };
     }
-
-    private void showTrailerButtonIfOnline () {
-
-        if (isConnected(connectivityManager)) {
-            if (fetchOfficialVideoID() != null)
-                showButton(trailerButton);
-            else
-                showTrailerButtonIfOnline();
-        }
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -260,18 +257,33 @@ public class MovieDetail extends AppCompatActivity implements ReviewRecyclerView
         final ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<Movie> call = apiInterface.getMovieDetail(movies.get(position).getId(), API_KEY, appendToRequest, language);
 
+        //noinspection NullableProblems
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(@NonNull Call<Movie> call, Response<Movie> response) {
 
+                flag = ONLINE;
+
                 movies.get(position).setVideoCollection(Objects.requireNonNull(response.body()).getVideoCollection());
                 movies.get(position).setReviews(Objects.requireNonNull(response.body()).getReviews());
 
-                videoID = fetchOfficialVideoID();
+                if (movies.get(position).getVideoCollection().getVideoResultsList().isEmpty())
+                    runOnUiThread(new Runnable() {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @Override
+                        public void run() {
+
+                            trailerButton.setForeground(getDrawable(R.drawable.trailer_button_dark));
+                            showButton(trailerButton);
+                        }
+                    });
+                else
+                    showButton(trailerButton);
+
                 setUpRecyclerView();
                 showReviews();
                 Picasso.get()
-                        .load("https://image.tmdb.org/t/p/w780" + movies.get(position).getBackdropPath())
+                        .load(BACKDROP_URL + movies.get(position).getBackdropPath())
                         .placeholder(Objects.requireNonNull(getDrawable(R.color.colorBlack)))
                         .into(backdrop);
 
@@ -305,11 +317,11 @@ public class MovieDetail extends AppCompatActivity implements ReviewRecyclerView
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         setUpCollapsingToolbarTitle(this, appBarLayout, toolbar);
 
-        position = getIntent().getIntExtra(POSITION, -1);
+        position = getIntent().getIntExtra(POSITION, DEFAULT_POSITION);
         flag = getIntent().getIntExtra(CONNECTION_FLAG, ONLINE);
 
         // Setting up required attributes on creating activity
-        if (position != -1) {
+        if (position != DEFAULT_POSITION) {
 
             populateUI();
             setUpRecyclerView();
@@ -351,15 +363,20 @@ public class MovieDetail extends AppCompatActivity implements ReviewRecyclerView
 
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void populateUI() {
 
         if (flag == ONLINE) {
 
-            showTrailerButtonIfOnline();
-            videoID = fetchOfficialVideoID();
+            if (fetchOfficialVideoID() != null && !fetchOfficialVideoID().equals(NULL))
+                showButton(trailerButton);
+            else {
+                trailerButton.setForeground(getDrawable(R.drawable.trailer_button_dark));
+                showButton(trailerButton);
+            }
 
             Picasso.get()
-                    .load("https://image.tmdb.org/t/p/w780" + movies.get(position).getBackdropPath())
+                    .load(BACKDROP_URL + movies.get(position).getBackdropPath())
                     .placeholder(Objects.requireNonNull(getDrawable(R.color.colorBlack)))
                     .into(backdrop);
 
@@ -367,6 +384,7 @@ public class MovieDetail extends AppCompatActivity implements ReviewRecyclerView
 
         }
 
+        int ratingAverage;
         if (UserPreferences.getSavedState(getApplicationContext()) == UserPreferences.FAVOURITE)
             ratingAverage = movies.get(position).getVoteAverage().intValue()/10;
         else

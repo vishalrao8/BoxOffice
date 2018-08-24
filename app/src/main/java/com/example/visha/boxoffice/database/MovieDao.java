@@ -24,8 +24,10 @@ public interface MovieDao {
     @Insert
     void addMovie(Movie movie);
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateMovie(Movie movie);
+// --Commented out by Inspection START (17 Aug 2018 12:31):
+//    @Update(onConflict = OnConflictStrategy.REPLACE)
+//    void updateMovie(Movie movie);
+// --Commented out by Inspection STOP (17 Aug 2018 12:31)
 
     @Delete
     void removeMovie(Movie movie);

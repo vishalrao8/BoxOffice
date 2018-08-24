@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:clickable="true"
     android:focusable="true"
-    android:stateListAnimator="@anim/lift_on_touch"
+    android:stateListAnimator="@animator/lift_on_touch"
     android:foreground="?android:attr/selectableItemBackground">
 
         <ImageView

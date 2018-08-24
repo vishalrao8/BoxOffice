@@ -8,7 +8,7 @@ import com.example.visha.boxoffice.model.Movie;
 
 public class MovieViewModel extends ViewModel {
 
-    private LiveData<Movie> movieLiveData;
+    private final LiveData<Movie> movieLiveData;
 
     public MovieViewModel (MovieDatabase movieDatabase, int id) {
 

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class FavouriteMoviesViewModel extends AndroidViewModel {
 
-    private LiveData<List<Movie>> favMovies;
+    private final LiveData<List<Movie>> favMovies;
 
     public FavouriteMoviesViewModel(@NonNull Application application) {
         super(application);

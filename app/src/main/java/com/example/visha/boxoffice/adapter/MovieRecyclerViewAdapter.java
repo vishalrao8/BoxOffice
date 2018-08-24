@@ -1,10 +1,8 @@
 package com.example.visha.boxoffice.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,9 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
 
     final private onClickListener mOnClickListener;
     private List<Movie> movies;
-    private Context context;
+    private final Context context;
+
+    private static final String POSTER_URL = "https://image.tmdb.org/t/p/w342";
 
     public interface onClickListener {
         void onViewClicked(int position);
@@ -63,7 +63,7 @@ public class MovieRecyclerViewAdapter extends RecyclerView.Adapter<MovieRecycler
     public void onBindViewHolder(@NonNull MovieTileViewHolder holder, int position) {
 
         Picasso.get()
-                .load("https://image.tmdb.org/t/p/w342" + movies.get(position).getPosterPath())
+                .load(POSTER_URL + movies.get(position).getPosterPath())
                 .placeholder(Objects.requireNonNull(context.getDrawable(R.color.colorWhite)))
                 .into(holder.movieTile);
 
