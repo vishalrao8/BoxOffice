@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorDarkGrey"
+    tools:ignore="Overdraw">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/colorWhite"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:title="@string/app_name"
+            app:titleTextAppearance="@style/ToolbarTitleStyle"/>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_height="@dimen/tab_layout_height"
+            android:layout_width="match_parent"
+            android:background="@color/colorGrey"
+            app:tabTextAppearance="@style/TabLayoutTextStyle"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/colorBlack"
+            app:tabIndicatorHeight=".8dp"
+            app:tabSelectedTextColor="@color/colorBlack">
+
+            <android.support.design.widget.TabItem
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.design.widget.TabLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.united_creation.visha.boxoffice.view.GridRecyclerView
+        android:id="@+id/movie_list_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorDarkGrey"
+        android:fitsSystemWindows="false"
+        android:layoutAnimation="@anim/grid_layout_animation"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </com.united_creation.visha.boxoffice.view.GridRecyclerView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@drawable/home_gradient_white"
+        android:layout_gravity="bottom"
+        android:fitsSystemWindows="true" />
+
+    <TextView
+        android:id="@+id/empty_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:text="@string/nothing_to_show"
+        android:textSize="18sp" />
+
+</android.support.design.widget.CoordinatorLayout>

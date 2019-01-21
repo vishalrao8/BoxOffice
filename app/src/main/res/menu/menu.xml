@@ -5,7 +5,7 @@
 
     <item
         app:showAsAction="always"
-        android:icon="@drawable/ic_sort_black_24dp"
+        android:icon="@drawable/ic_sortby_24dp"
         tools:ignore="AlwaysShowAction,MenuTitle">
 
         <menu>

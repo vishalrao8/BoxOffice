@@ -5,10 +5,10 @@
     <color name="colorDarkGrey">#E5E5E5</color>
     <color name="colorWhite">#FFFFFF</color>
 
-    <color name="marginColor">#E0E0E0</color>
+    <color name="marginColor">#12000000</color>
     <color name="likesCountColor">#616161</color>
     <color name="greyTextColor">#424242</color>
 
     <color name="colorRed">#FF0000</color>
-    <color name="colorRedAlpha50">#EBA9A9</color>
+    <color name="colorRedAlpha50">#50FF0000</color>
 </resources>
