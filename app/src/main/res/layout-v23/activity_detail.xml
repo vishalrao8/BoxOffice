@@ -14,7 +14,8 @@
         android:layout_height="35dp"
         android:translationY="35dp"
         android:layout_gravity="center|bottom"
-        android:background="@drawable/detail_btn_trailor" />
+        android:background="@drawable/detail_background_btn_trailor"
+        android:foreground="@drawable/detail_ripple_btn_trailor" />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"

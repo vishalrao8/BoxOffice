@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    android:background="@color/colorDarkGrey"
+    android:background="@color/colorWhite"
     android:animateLayoutChanges="true">
 
     <View
@@ -16,7 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/detail_background_header"
-        android:elevation="3dp"
         app:layout_constraintBottom_toBottomOf="@id/movie_title_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +25,6 @@
         android:id="@+id/movie_title_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:elevation="3dp"
         android:ellipsize="marquee"
         android:fontFamily="@font/fredoka_one"
         android:marqueeRepeatLimit="marquee_forever"
@@ -47,7 +45,7 @@
         android:id="@+id/genre_rv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/description_view"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,9 +56,8 @@
         android:id="@+id/description_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
         android:background="@color/colorWhite"
-        app:layout_constraintBottom_toBottomOf="@id/description_tv"
+        app:layout_constraintBottom_toBottomOf="@id/review_rv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/genre_rv" />
@@ -79,7 +76,7 @@
         android:id="@+id/percentage_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/fredoka_one"
         android:padding="28dp"
         android:textColor="@color/colorBlack"
@@ -135,10 +132,8 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/roboto_light"
         android:lineSpacingExtra="4sp"
-        android:paddingBottom="16dp"
         android:textAlignment="center"
-        android:textColor="@color/colorBlack"
-        android:textSize="16sp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
         app:layout_constraintEnd_toEndOf="@+id/margin_view"
         app:layout_constraintStart_toStartOf="@+id/margin_view"
         app:layout_constraintTop_toBottomOf="@+id/margin_view"
@@ -156,29 +151,27 @@
         app:layout_constraintStart_toStartOf="@+id/like_bar"
         app:layout_constraintTop_toTopOf="@+id/like_bar" />
 
-    <TextView
-        android:id="@+id/review_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:fontFamily="@font/roboto_medium"
-        android:text="@string/review_title"
-        android:textColor="@color/colorBlack"
-        android:textSize="14sp"
+    <View
+        android:id="@+id/divider_desc_rv"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
         android:visibility="gone"
+        android:background="@color/marginColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description_tv" />
+        app:layout_constraintTop_toBottomOf="@id/description_tv" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/review_rv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin"
         android:nestedScrollingEnabled="false"
-        android:paddingBottom="50dp"
+        android:paddingBottom="40dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/review_header" />
+        app:layout_constraintTop_toBottomOf="@+id/divider_desc_rv" />
 
 </android.support.constraint.ConstraintLayout>

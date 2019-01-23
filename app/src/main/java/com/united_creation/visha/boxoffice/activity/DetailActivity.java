@@ -90,8 +90,11 @@ public class DetailActivity extends AppCompatActivity implements ReviewRecyclerV
     @BindView(R.id.certificate_tv)
     TextView certificate;
 
-    @BindView(R.id.review_header)
-    TextView reviewHeader;
+    /*@BindView(R.id.review_header)
+    TextView reviewHeader;*/
+
+    @BindView(R.id.divider_desc_rv)
+    View divider_desc_rv;
 
     @BindView(R.id.genre_rv)
     RecyclerView genreRecyclerView;
@@ -332,7 +335,8 @@ public class DetailActivity extends AppCompatActivity implements ReviewRecyclerV
 
         if (!movies.get(position).getReviews().getReviewResults().isEmpty()) {
 
-            reviewHeader.setVisibility(View.VISIBLE);
+            //reviewHeader.setVisibility(View.VISIBLE);
+            divider_desc_rv.setVisibility(View.VISIBLE);
             reviewsRecyclerView.setVisibility(View.VISIBLE);
 
         }
@@ -371,6 +375,7 @@ public class DetailActivity extends AppCompatActivity implements ReviewRecyclerV
                 showButton(trailerButton);
             else {
                 trailerButton.setForeground(getDrawable(R.drawable.detail_btn_trailor_dark));
+                trailerButton.setBackground(getDrawable(R.drawable.detail_btn_trailor_dark));
                 showButton(trailerButton);
             }
 

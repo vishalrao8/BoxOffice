@@ -5,6 +5,7 @@
     <color name="colorDarkGrey">#E5E5E5</color>
     <color name="colorWhite">#FFFFFF</color>
 
+    <color name="chipColor">#10000000</color>
     <color name="marginColor">#12000000</color>
     <color name="likesCountColor">#616161</color>
     <color name="greyTextColor">#424242</color>

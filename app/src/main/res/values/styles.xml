@@ -7,29 +7,23 @@
         <item name="colorAccent">@color/colorWhite</item>
     </style>
 
-    <style name="SplashActivityTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="SplashActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background</item>
-        <item name="android:statusBarColor">@color/colorBlack</item>
+        <item name="android:colorPrimaryDark">@color/colorBlack</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <style name="ErrorActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/error_background</item>
-        <item name="android:statusBarColor">@color/colorWhite</item>
+        <item name="android:colorPrimaryDark">@color/colorGrey</item>
     </style>
 
     <style name="HomeActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/colorGrey</item>
+        <item name="android:colorPrimaryDark">@color/colorGrey</item>
     </style>
 
     <style name="MovieDetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorPrimaryDark">@color/colorBlack</item>
     </style>
 
     <style name="ToolbarTitleStyle">
@@ -54,9 +48,8 @@
     </style>
 
     <style name="ReviewCardViewTheme" parent="MovieCardViewTheme">
-        <item name="cardCornerRadius">2dp</item>
-        <item name="cardElevation">1dp</item>
-        <item name="cardBackgroundColor">@color/colorWhite</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">@android:color/transparent</item>
         <item name="android:layout_marginLeft">@dimen/review_card_horizontal</item>
         <item name="android:layout_marginRight">@dimen/review_card_horizontal</item>
         <item name="android:layout_marginTop">@dimen/review_card_vertical</item>

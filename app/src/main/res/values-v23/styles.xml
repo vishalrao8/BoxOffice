@@ -2,7 +2,13 @@
 <resources>
 
     <style name="HomeActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/colorGrey</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:colorPrimaryDark">@color/colorGrey</item>
+    </style>
+
+    <style name="ErrorActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/error_background</item>
+        <item name="android:colorPrimaryDark">@color/colorGrey</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
