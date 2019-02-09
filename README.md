@@ -1,5 +1,5 @@
 # BoxOffice
-An app to know about currently Top-Rated &amp; Popular Movies on TMDb
+An app to discover the most popular and top rated movies and personalise an offline collection of your favourite movies in well-crafted user experience.
 
 ## UI
 <img src="https://drive.google.com/uc?export=view&id=15McfRMATjbOo0CfJLysks9LYMbqd4lUC" width="150">&nbsp; &nbsp; &nbsp;<img src="https://drive.google.com/uc?export=view&id=15EWZikvCduelJpIG6OLu57T81OICvZa1" width="150">&nbsp; &nbsp; &nbsp;<img src="https://drive.google.com/uc?export=view&id=1mrizDOmi0MtC4kNsheLl-98p6l0Mq8VG" width="150">&nbsp; &nbsp; &nbsp;<img src="https://drive.google.com/uc?export=view&id=1rNoqRjmS1G4zqQjvoWaRokydTkckp_6H" width="150">&nbsp; &nbsp; &nbsp;<img src="https://drive.google.com/uc?export=view&id=1qwdtb-mgK1A-axAip2AQ0DeKOmG8CYr8" width="150">&nbsp; &nbsp; &nbsp;<img src="https://drive.google.com/uc?export=view&id=1UeefDedgEpPoy8CjGqD2PymaQh0WWkrU" width="150">&nbsp; &nbsp; &nbsp;<img src="https://drive.google.com/uc?export=view&id=1qrMUauEcNnjPp3ZNPttuXZl3J8ntIj-f" width="150">&nbsp; &nbsp; &nbsp;<img src="https://drive.google.com/uc?export=view&id=15j8afaKeF-bxRSRyBa0YzMzHJmf4AzpD" width="150">
