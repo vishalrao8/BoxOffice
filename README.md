@@ -23,7 +23,7 @@ Now stay updated with this beautiful application, crafted for you to personalise
 - Discover the collection of movies at your home screen.
 - Switch betweeen Most Popular and Top Rated movies using an icon at the top rigth corner in the app bar.
 - Discover details by choosing any attractive poster.
-- Watch trailor and reviews about movie and create a list of your favourite movies using the like button in the details' page.
+- Watch trailor and reviews about the movie and create a list of your favourite movies using the like button in the details' page.
 - Showcase your favorite movies to your friends even when you are offline.
 
 ## User Interface
