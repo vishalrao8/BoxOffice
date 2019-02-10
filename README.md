@@ -19,7 +19,7 @@ Now stay updated with this beautiful application, crafted for you to personalise
 
 # Usage
 
-- Start the application by clicking on the app icon from the launcher menu.
+- Start the application by clicking on the app icon in the launcher menu.
 - Discover the collection of movies at your home screen.
 - Switch betweeen Most Popular and Top Rated movies using an icon at the top rigth corner in the app bar.
 - Discover details by choosing any attractive poster.
