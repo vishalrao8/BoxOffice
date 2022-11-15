@@ -30,7 +30,11 @@ android {
         }
     }
     buildTypes.each {
-        it.buildConfigField('String', 'API_KEY', BoxOffice_ApiKey)
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+        it.buildConfigField "String", "API_KEY", "\"${properties.getProperty('BoxOffice_ApiKey')}\""
+//        it.buildConfigField('String', 'API_KEY', BoxOffice_ApiKey)
     }
 }
 
