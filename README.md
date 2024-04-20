@@ -22,11 +22,7 @@ Now stay updated with this beautiful application, crafted for you to personalise
 
 ## User Interface
 
-<video controls>
-  <source src="video/UI.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
+[![Watch the video](https://drive.google.com/file/d/1pM4omZO0KTKLkmn5FtesZuhGiHBYEU0F/view?usp=drive_link)](https://drive.google.com/file/d/1pM4omZO0KTKLkmn5FtesZuhGiHBYEU0F/view?usp=drive_link)
 
 # Contribution
 
