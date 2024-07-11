@@ -22,7 +22,7 @@ Now stay updated with this beautiful application, crafted for you to personalise
 
 ## User Interface
 
-[![Watch the video](https://drive.google.com/file/d/1pM4omZO0KTKLkmn5FtesZuhGiHBYEU0F/view?usp=drive_link)](https://drive.google.com/file/d/1pM4omZO0KTKLkmn5FtesZuhGiHBYEU0F/view?usp=drive_link)
+https://github.com/vishalrao8/BoxOffice/assets/27092065/970041bd-4829-420a-80bb-779fe4367439
 
 # Contribution
 
